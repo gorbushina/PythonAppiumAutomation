@@ -144,3 +144,23 @@ class Tests:
                                                   error_message="No results")
 
         assert len(elements) > 1, "Less than 1"
+
+
+    def test_check_words(self):
+        find_article = "Java"
+        self.wait_for_element_and_click(by=[AppiumBy.XPATH, "//*[contains(@text, 'SKIP')]"],
+                                        error_message="Cannot find element skip button")
+
+        self.wait_for_element_and_click(by=[AppiumBy.XPATH, "//*[contains(@text, 'Search Wikipedia')]"],
+                                        error_message="Cannot find element search input")
+
+        self.wait_for_element_and_send_keys(
+            by=[AppiumBy.XPATH, "//*[contains(@resource-id, 'org.wikipedia:id/search_src_text')]"],
+            value=find_article,
+            error_message='Cannot find element search')
+
+        elements = self.wait_for_elements_present(by=[AppiumBy.XPATH, f"//*[contains(@text, '{find_article}')]"],
+                                                  error_message="No results")
+
+        for i in elements:
+            assert i.get_attribute('text').startswith("Java"), "No Java in article"
